@@ -6,15 +6,15 @@ import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Data
-public class Film {
+public class User {
   @PositiveOrZero
   private Long id;
+  @Email
   @NotEmpty
+  private String email;
+  @NotEmpty
+  private String login;
   private String name;
-  @Size(max = 200)
-  private String description;
   @PastOrPresent
-  private LocalDate releaseDate;
-  @PositiveOrZero
-  private int duration;
+  private LocalDate birthday;
 }
