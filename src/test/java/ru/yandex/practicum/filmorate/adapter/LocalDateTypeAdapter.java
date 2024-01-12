@@ -11,10 +11,10 @@ import java.time.format.DateTimeFormatter;
 
 public class LocalDateTypeAdapter implements JsonSerializer<LocalDate> {
 
-  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
-  @Override
-  public JsonElement serialize(LocalDate localDate, Type type, JsonSerializationContext jsonSerializationContext) {
-    return new JsonPrimitive(localDate.format(FORMATTER));
-  }
+    @Override
+    public JsonElement serialize(LocalDate localDate, Type type, JsonSerializationContext jsonSerializationContext) {
+        return new JsonPrimitive(localDate.format(FORMATTER));
+    }
 }

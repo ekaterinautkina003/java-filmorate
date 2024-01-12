@@ -4,9 +4,9 @@ import java.util.Collection;
 
 public interface EntityService<T> {
 
-  T add(T entity);
+    T add(T entity);
 
-  T update(T entity);
+    T update(T entity);
 
-  Collection<T> getAll();
+    Collection<T> getAll();
 }

@@ -16,37 +16,37 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 
-  private final UserService userService;
-  private final LoginValidator loginValidator;
+    private final UserService userService;
+    private final LoginValidator loginValidator;
 
-  @PutMapping("/add")
-  public ResponseEntity<?> add(@Valid @RequestBody User user) {
-    try {
-      loginValidator.validate(user.getLogin());
-      if (user.getName().isEmpty()) {
-        user.setName(user.getLogin());
-      }
-      return new ResponseEntity<>(userService.add(user), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PutMapping("/add")
+    public ResponseEntity<?> add(@Valid @RequestBody User user) {
+        try {
+            loginValidator.validate(user.getLogin());
+            if (user.getName().isEmpty()) {
+                user.setName(user.getLogin());
+            }
+            return new ResponseEntity<>(userService.add(user), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @PostMapping("/update")
-  public ResponseEntity<?> update(@Valid @RequestBody User user) {
-    try {
-      loginValidator.validate(user.getLogin());
-      if (user.getName().isEmpty()) {
-        user.setName(user.getLogin());
-      }
-      return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PostMapping("/update")
+    public ResponseEntity<?> update(@Valid @RequestBody User user) {
+        try {
+            loginValidator.validate(user.getLogin());
+            if (user.getName().isEmpty()) {
+                user.setName(user.getLogin());
+            }
+            return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @GetMapping("/getAll")
-  public ResponseEntity<?> getAll() {
-    return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
-  }
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    }
 }

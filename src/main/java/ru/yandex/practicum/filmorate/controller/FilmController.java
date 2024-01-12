@@ -17,31 +17,31 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class FilmController {
 
-  private final FilmService filmService;
-  private final ReleaseDateValidator releaseDateValidator;
+    private final FilmService filmService;
+    private final ReleaseDateValidator releaseDateValidator;
 
-  @PutMapping("/add")
-  public ResponseEntity<?> add(@Valid @RequestBody Film film) {
-    try {
-      releaseDateValidator.validate(film.getReleaseDate());
-      return new ResponseEntity<>(filmService.add(film), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PutMapping("/add")
+    public ResponseEntity<?> add(@Valid @RequestBody Film film) {
+        try {
+            releaseDateValidator.validate(film.getReleaseDate());
+            return new ResponseEntity<>(filmService.add(film), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @PostMapping("/update")
-  public ResponseEntity<?> update(@Valid @RequestBody Film film) {
-    try {
-      releaseDateValidator.validate(film.getReleaseDate());
-      return new ResponseEntity<>(filmService.update(film), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @PostMapping("/update")
+    public ResponseEntity<?> update(@Valid @RequestBody Film film) {
+        try {
+            releaseDateValidator.validate(film.getReleaseDate());
+            return new ResponseEntity<>(filmService.update(film), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @GetMapping("/getAll")
-  public ResponseEntity<?> getAll() {
-    return new ResponseEntity<>(filmService.getAll(), HttpStatus.OK);
-  }
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(filmService.getAll(), HttpStatus.OK);
+    }
 }

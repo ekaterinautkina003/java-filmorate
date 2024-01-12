@@ -7,14 +7,14 @@ import java.time.LocalDate;
 
 @Data
 public class User {
-  @PositiveOrZero
-  private Long id;
-  @Email
-  @NotEmpty
-  private String email;
-  @NotEmpty
-  private String login;
-  private String name;
-  @PastOrPresent
-  private LocalDate birthday;
+    @PositiveOrZero
+    private Long id;
+    @Email
+    @NotEmpty
+    private String email;
+    @NotEmpty
+    private String login;
+    private String name;
+    @PastOrPresent
+    private LocalDate birthday;
 }
