@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public abstract class ControllerTest {
 
-    protected final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
-            .create();
+  protected final Gson gson = new GsonBuilder()
+          .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
+          .create();
 }

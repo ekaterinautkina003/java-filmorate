@@ -13,24 +13,35 @@ import java.util.Map;
 @Service
 public class UserService implements EntityService<User> {
 
-    private Map<Long, User> users = new HashMap<>();
+  private Map<Long, User> users = new HashMap<>();
 
-    @Override
-    public User add(User entity) {
-        users.put(entity.getId(), entity);
-        log.info("Create new user: {}", entity);
-        return entity;
-    }
+  private Long id = 1L;
 
-    @Override
-    public User update(User entity) {
-        users.put(entity.getId(), entity);
-        log.info("Update user with id: {}, entity: {}", entity.getId(), entity);
-        return entity;
-    }
+  @Override
+  public User add(User entity) {
+    entity.setId(generationId());
+    users.put(entity.getId(), entity);
+    log.info("Create new user: {}", entity);
+    return entity;
+  }
 
-    @Override
-    public Collection<User> getAll() {
-        return users.values();
-    }
+  @Override
+  public User update(User entity) {
+    User user = users.get(entity.getId());
+    user.setName(entity.getName());
+    user.setLogin(entity.getLogin());
+    user.setEmail(entity.getEmail());
+    user.setBirthday(entity.getBirthday());
+    log.info("Update user with id: {}, entity: {}", entity.getId(), entity);
+    return entity;
+  }
+
+  @Override
+  public Collection<User> getAll() {
+    return users.values();
+  }
+
+  private Long generationId() {
+    return id++;
+  }
 }

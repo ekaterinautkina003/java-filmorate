@@ -13,24 +13,34 @@ import java.util.Map;
 @Service
 public class FilmService implements EntityService<Film> {
 
-    private Map<Long, Film> films = new HashMap<>();
+  private Map<Long, Film> films = new HashMap<>();
+  private Long id = 1L;
 
-    @Override
-    public Film add(Film entity) {
-        films.put(entity.getId(), entity);
-        log.info("Create new film: {}", entity);
-        return entity;
-    }
+  @Override
+  public Film add(Film entity) {
+    entity.setId(generationId());
+    films.put(entity.getId(), entity);
+    log.info("Create new film: {}", entity);
+    return entity;
+  }
 
-    @Override
-    public Film update(Film entity) {
-        films.put(entity.getId(), entity);
-        log.info("Update file with id: {}, entity: {}", entity.getId(), entity);
-        return entity;
-    }
+  @Override
+  public Film update(Film entity) {
+    Film film = films.get(entity.getId());
+    film.setDescription(entity.getDescription());
+    film.setName(entity.getName());
+    film.setReleaseDate(entity.getReleaseDate());
+    film.setDuration(entity.getDuration());
+    log.info("Update file with id: {}, entity: {}", entity.getId(), entity);
+    return entity;
+  }
 
-    @Override
-    public Collection<Film> getAll() {
-        return films.values();
-    }
+  @Override
+  public Collection<Film> getAll() {
+    return films.values();
+  }
+
+  private Long generationId() {
+    return id++;
+  }
 }
