@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.service.EntityService;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -36,8 +37,8 @@ public class FilmService implements EntityService<Film> {
   }
 
   @Override
-  public Collection<Film> getAll() {
-    return films.values();
+  public List<Film> getAll() {
+    return List.copyOf(films.values());
   }
 
   private Long generationId() {

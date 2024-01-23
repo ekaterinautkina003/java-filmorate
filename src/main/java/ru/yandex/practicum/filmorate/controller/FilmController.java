@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
@@ -12,7 +13,7 @@ import ru.yandex.practicum.filmorate.validator.impl.ReleaseDateValidator;
 
 import javax.validation.Valid;
 
-
+@Validated
 @RestController
 @RequestMapping("/films")
 @RequiredArgsConstructor
