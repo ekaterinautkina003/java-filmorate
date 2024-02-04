@@ -2,11 +2,13 @@ package ru.yandex.practicum.filmorate.service;
 
 import java.util.Collection;
 
-public interface EntityService<T> {
+public interface Service<T> {
 
-  T add(T entity);
+  T getById(Long id);
 
-  T update(T entity);
+  T add(T t);
+
+  T update(T t);
 
   Collection<T> getAll();
 }
