@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -52,7 +53,7 @@ public class FilmController {
     try {
       return new ResponseEntity<>(filmService.getById(id), HttpStatus.OK);
     } catch (Exception e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()),  HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
   }
 
@@ -61,8 +62,8 @@ public class FilmController {
     try {
       filmService.addLike(filmId, userId);
       return new ResponseEntity<>(HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()),  HttpStatus.NOT_FOUND);
+    } catch (EntityNotFoundException e) {
+      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
   }
 
@@ -71,13 +72,13 @@ public class FilmController {
     try {
       filmService.removeLike(filmId, userId);
       return new ResponseEntity<>(HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()),  HttpStatus.NOT_FOUND);
+    } catch (EntityNotFoundException e) {
+      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
     }
   }
 
   @GetMapping("/popular")
-  public ResponseEntity<?> popular(@RequestParam("count") Integer count) {
+  public ResponseEntity<?> popular(@RequestParam(name = "count", required = false) Integer count) {
     int popularCount = count == null ? 10 : count;
     return new ResponseEntity<>(filmService.getPopular(popularCount), HttpStatus.OK);
   }

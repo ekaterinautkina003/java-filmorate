@@ -40,6 +40,8 @@ public class InMemoryUserStorage implements Storage<User> {
     user.setLogin(entity.getLogin());
     user.setEmail(entity.getEmail());
     user.setBirthday(entity.getBirthday());
+    user.setFriends(entity.getFriends());
+    users.put(user.getId(), user);
     log.info("Update user with id: {}, entity: {}", entity.getId(), entity);
     return entity;
   }

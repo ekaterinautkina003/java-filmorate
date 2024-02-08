@@ -83,7 +83,7 @@ public class UserController {
     }
   }
 
-  @GetMapping("/{id}/friends/")
+  @GetMapping("/{id}/friends")
   public ResponseEntity<?> getAllFriends(@PathVariable("id") Long userId) {
     try {
       return new ResponseEntity<>(userService.getAllFriends(userId), HttpStatus.OK);

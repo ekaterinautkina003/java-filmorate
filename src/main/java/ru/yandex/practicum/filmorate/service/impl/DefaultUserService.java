@@ -43,6 +43,7 @@ public class DefaultUserService implements UserService {
     User friend = getById(friendId);
     user.getFriends().add(friendId);
     friend.getFriends().add(userId);
+    update(user);
   }
 
   @Override
@@ -51,6 +52,7 @@ public class DefaultUserService implements UserService {
     User friend = getById(friendId);
     user.getFriends().remove(friendId);
     friend.getFriends().remove(userId);
+    update(user);
   }
 
   @Override

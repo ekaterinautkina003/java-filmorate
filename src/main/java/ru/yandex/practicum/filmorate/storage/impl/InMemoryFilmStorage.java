@@ -39,6 +39,8 @@ public class InMemoryFilmStorage implements Storage<Film> {
     film.setName(entity.getName());
     film.setReleaseDate(entity.getReleaseDate());
     film.setDuration(entity.getDuration());
+    film.setLikedUsers(entity.getLikedUsers());
+    films.put(film.getId(), film);
     log.info("Update file with id: {}, entity: {}", entity.getId(), entity);
     return entity;
   }
