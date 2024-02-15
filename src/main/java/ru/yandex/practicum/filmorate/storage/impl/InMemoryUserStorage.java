@@ -14,44 +14,44 @@ import java.util.Map;
 @Component
 public class InMemoryUserStorage implements Storage<User> {
 
-  public final Map<Long, User> users = new HashMap<>();
+    public final Map<Long, User> users = new HashMap<>();
 
-  private Long id = 1L;
+    private Long id = 1L;
 
-  @Override
-  public User getById(Long id) {
-    if (!users.containsKey(id))
-      throw new EntityNotFoundException(User.class, id);
-    return users.get(id);
-  }
+    @Override
+    public User getById(Long id) {
+        if (!users.containsKey(id))
+            throw new EntityNotFoundException(User.class, id);
+        return users.get(id);
+    }
 
-  @Override
-  public User add(User entity) {
-    entity.setId(generationId());
-    users.put(entity.getId(), entity);
-    log.info("Create new user: {}", entity);
-    return entity;
-  }
+    @Override
+    public User add(User entity) {
+        entity.setId(generationId());
+        users.put(entity.getId(), entity);
+        log.info("Create new user: {}", entity);
+        return entity;
+    }
 
-  @Override
-  public User update(User entity) {
-    User user = users.get(entity.getId());
-    user.setName(entity.getName());
-    user.setLogin(entity.getLogin());
-    user.setEmail(entity.getEmail());
-    user.setBirthday(entity.getBirthday());
-    user.setFriends(entity.getFriends());
-    users.put(user.getId(), user);
-    log.info("Update user with id: {}, entity: {}", entity.getId(), entity);
-    return entity;
-  }
+    @Override
+    public User update(User entity) {
+        User user = users.get(entity.getId());
+        user.setName(entity.getName());
+        user.setLogin(entity.getLogin());
+        user.setEmail(entity.getEmail());
+        user.setBirthday(entity.getBirthday());
+        user.setFriends(entity.getFriends());
+        users.put(user.getId(), user);
+        log.info("Update user with id: {}, entity: {}", entity.getId(), entity);
+        return entity;
+    }
 
-  @Override
-  public List<User> getAll() {
-    return List.copyOf(users.values());
-  }
+    @Override
+    public List<User> getAll() {
+        return List.copyOf(users.values());
+    }
 
-  private Long generationId() {
-    return id++;
-  }
+    private Long generationId() {
+        return id++;
+    }
 }

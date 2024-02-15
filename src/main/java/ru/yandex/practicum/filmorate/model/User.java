@@ -11,14 +11,14 @@ import java.util.Set;
 
 @Data
 public class User {
-  private Long id;
-  @Email
-  @NotEmpty
-  private String email;
-  @NotEmpty
-  private String login;
-  private String name;
-  @PastOrPresent
-  private LocalDate birthday;
-  private Set<Long> friends = new HashSet<>();
+    private Long id;
+    @Email
+    @NotEmpty
+    private String email;
+    @NotEmpty
+    private String login;
+    private String name;
+    @PastOrPresent
+    private LocalDate birthday;
+    private Set<Long> friends = new HashSet<>();
 }

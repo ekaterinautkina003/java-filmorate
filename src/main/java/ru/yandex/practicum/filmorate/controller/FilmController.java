@@ -20,66 +20,65 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class FilmController {
 
-  private final FilmService filmService;
-  private final ReleaseDateValidator releaseDateValidator;
+    private final FilmService filmService;
+    private final ReleaseDateValidator releaseDateValidator;
 
-  @PostMapping
-  public ResponseEntity<?> add(@Valid @RequestBody Film film) {
-    try {
-      releaseDateValidator.validate(film.getReleaseDate());
-      return new ResponseEntity<>(filmService.add(film), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    @PostMapping
+    public ResponseEntity<?> add(@Valid @RequestBody Film film) {
+        try {
+            releaseDateValidator.validate(film.getReleaseDate());
+            return new ResponseEntity<>(filmService.add(film), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @PutMapping
-  public ResponseEntity<?> update(@Valid @RequestBody Film film) {
-    try {
-      releaseDateValidator.validate(film.getReleaseDate());
-      return new ResponseEntity<>(filmService.update(film), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    @PutMapping
+    public ResponseEntity<?> update(@Valid @RequestBody Film film) {
+        try {
+            releaseDateValidator.validate(film.getReleaseDate());
+            return new ResponseEntity<>(filmService.update(film), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @GetMapping
-  public ResponseEntity<?> getAll() {
-    return new ResponseEntity<>(filmService.getAll(), HttpStatus.OK);
-  }
-
-  @GetMapping("/{id}")
-  public ResponseEntity<?> getById(@PathVariable("id") Long id) {
-    try {
-      return new ResponseEntity<>(filmService.getById(id), HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(filmService.getAll(), HttpStatus.OK);
     }
-  }
 
-  @PutMapping("/{id}/like/{userId}")
-  public ResponseEntity<?> addLike(@PathVariable("id") Long filmId, @PathVariable("userId") Long userId) {
-    try {
-      filmService.addLike(filmId, userId);
-      return new ResponseEntity<>(HttpStatus.OK);
-    } catch (EntityNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        try {
+            return new ResponseEntity<>(filmService.getById(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
-  }
 
-  @DeleteMapping("/{id}/like/{userId}")
-  public ResponseEntity<?> removeLike(@PathVariable("id") Long filmId, @PathVariable("userId") Long userId) {
-    try {
-      filmService.removeLike(filmId, userId);
-      return new ResponseEntity<>(HttpStatus.OK);
-    } catch (EntityNotFoundException e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+    @PutMapping("/{id}/like/{userId}")
+    public ResponseEntity<?> addLike(@PathVariable("id") Long filmId, @PathVariable("userId") Long userId) {
+        try {
+            filmService.addLike(filmId, userId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
-  }
 
-  @GetMapping("/popular")
-  public ResponseEntity<?> popular(@RequestParam(name = "count", required = false) Integer count) {
-    int popularCount = count == null ? 10 : count;
-    return new ResponseEntity<>(filmService.getPopular(popularCount), HttpStatus.OK);
-  }
+    @DeleteMapping("/{id}/like/{userId}")
+    public ResponseEntity<?> removeLike(@PathVariable("id") Long filmId, @PathVariable("userId") Long userId) {
+        try {
+            filmService.removeLike(filmId, userId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<?> popular(@RequestParam(name = "count", required = false, defaultValue = "10") Integer count) {
+        return new ResponseEntity<>(filmService.getPopular(count), HttpStatus.OK);
+    }
 }

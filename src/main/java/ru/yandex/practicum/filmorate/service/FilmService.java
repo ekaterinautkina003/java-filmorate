@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface FilmService extends Service<Film> {
 
-  void addLike(Long filmId, Long userId);
+    void addLike(Long filmId, Long userId);
 
-  void removeLike(Long filmId, Long userId);
+    void removeLike(Long filmId, Long userId);
 
-  List<Film> getPopular(Integer count);
+    List<Film> getPopular(Integer count);
 }

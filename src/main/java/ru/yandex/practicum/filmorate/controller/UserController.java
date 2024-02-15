@@ -20,84 +20,84 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 
-  private final UserService userService;
-  private final LoginValidator loginValidator;
+    private final UserService userService;
+    private final LoginValidator loginValidator;
 
-  @PostMapping
-  public ResponseEntity<?> add(@Valid @RequestBody User user) {
-    try {
-      loginValidator.validate(user.getLogin());
-      if (user.getName() == null || user.getName().isEmpty()) {
-        user.setName(user.getLogin());
-      }
-      return new ResponseEntity<>(userService.add(user), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    @PostMapping
+    public ResponseEntity<?> add(@Valid @RequestBody User user) {
+        try {
+            loginValidator.validate(user.getLogin());
+            if (user.getName() == null || user.getName().isEmpty()) {
+                user.setName(user.getLogin());
+            }
+            return new ResponseEntity<>(userService.add(user), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @PutMapping
-  public ResponseEntity<?> update(@Valid @RequestBody User user) {
-    try {
-      loginValidator.validate(user.getLogin());
-      if (user.getName().isEmpty()) {
-        user.setName(user.getLogin());
-      }
-      return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
-    } catch (ValidationException e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+    @PutMapping
+    public ResponseEntity<?> update(@Valid @RequestBody User user) {
+        try {
+            loginValidator.validate(user.getLogin());
+            if (user.getName().isEmpty()) {
+                user.setName(user.getLogin());
+            }
+            return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+        } catch (ValidationException e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
     }
-  }
 
-  @GetMapping
-  public ResponseEntity<?> getAll() {
-    return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
-  }
-
-  @GetMapping("/{id}")
-  public ResponseEntity<?> getById(@PathVariable("id") Long id) {
-    try {
-      return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
-    } catch (Exception e) {
-      return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
-  }
 
-  @PutMapping("/{id}/friends/{friendId}")
-  public ResponseEntity<?> addFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
-    try {
-      userService.addFriend(userId, friendId);
-      return new ResponseEntity<>(HttpStatus.OK);
-    } catch (EntityNotFoundException notFoundException) {
-      return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        try {
+            return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
-  }
 
-  @DeleteMapping("/{id}/friends/{friendId}")
-  public ResponseEntity<?> deleteFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
-    try {
-      userService.deleteFriend(userId, friendId);
-      return new ResponseEntity<>(HttpStatus.OK);
-    } catch (EntityNotFoundException notFoundException) {
-      return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<?> addFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
+        try {
+            userService.addFriend(userId, friendId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
-  }
 
-  @GetMapping("/{id}/friends")
-  public ResponseEntity<?> getAllFriends(@PathVariable("id") Long userId) {
-    try {
-      return new ResponseEntity<>(userService.getAllFriends(userId), HttpStatus.OK);
-    } catch (EntityNotFoundException notFoundException) {
-      return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<?> deleteFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
+        try {
+            userService.deleteFriend(userId, friendId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
-  }
 
-  @GetMapping("/{id}/friends/common/{otherId}")
-  public ResponseEntity<?> getCrossFriends(@PathVariable("id") Long userId, @PathVariable("otherId") Long otherUserId) {
-    try {
-      return new ResponseEntity<>(userService.getCrossFriends(userId, otherUserId), HttpStatus.OK);
-    } catch (EntityNotFoundException notFoundException) {
-      return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<?> getAllFriends(@PathVariable("id") Long userId) {
+        try {
+            return new ResponseEntity<>(userService.getAllFriends(userId), HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
-  }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<?> getCrossFriends(@PathVariable("id") Long userId, @PathVariable("otherId") Long otherUserId) {
+        try {
+            return new ResponseEntity<>(userService.getCrossFriends(userId, otherUserId), HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
 }
