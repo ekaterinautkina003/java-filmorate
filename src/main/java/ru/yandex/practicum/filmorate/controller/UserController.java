@@ -5,10 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.impl.UserService;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.validator.impl.LoginValidator;
 
 import javax.validation.Valid;
@@ -51,5 +52,52 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        try {
+            return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<?> addFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
+        try {
+            userService.addFriend(userId, friendId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public ResponseEntity<?> deleteFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
+        try {
+            userService.deleteFriend(userId, friendId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}/friends")
+    public ResponseEntity<?> getAllFriends(@PathVariable("id") Long userId) {
+        try {
+            return new ResponseEntity<>(userService.getAllFriends(userId), HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public ResponseEntity<?> getCrossFriends(@PathVariable("id") Long userId, @PathVariable("otherId") Long otherUserId) {
+        try {
+            return new ResponseEntity<>(userService.getCrossFriends(userId, otherUserId), HttpStatus.OK);
+        } catch (EntityNotFoundException notFoundException) {
+            return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
+        }
     }
 }
