@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.service.impl.FriendshipService;
 import ru.yandex.practicum.filmorate.service.impl.UserService;
 import ru.yandex.practicum.filmorate.validator.impl.LoginValidator;
 
-
 import javax.validation.Valid;
 
 @Validated
