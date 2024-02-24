@@ -9,7 +9,8 @@ import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.impl.FriendshipService;
+import ru.yandex.practicum.filmorate.service.impl.UserService;
 import ru.yandex.practicum.filmorate.validator.impl.LoginValidator;
 
 import javax.validation.Valid;
@@ -20,8 +21,9 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
     private final LoginValidator loginValidator;
+    private final UserService userService;
+    private final FriendshipService friendshipService;
 
     @PostMapping
     public ResponseEntity<?> add(@Valid @RequestBody User user) {
@@ -44,6 +46,8 @@ public class UserController {
                 user.setName(user.getLogin());
             }
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+        } catch (EntityNotFoundException fg){
+            return new ResponseEntity<>(new ErrorResponse(fg.getMessage()), HttpStatus.NOT_FOUND);
         } catch (ValidationException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
@@ -66,7 +70,7 @@ public class UserController {
     @PutMapping("/{id}/friends/{friendId}")
     public ResponseEntity<?> addFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
         try {
-            userService.addFriend(userId, friendId);
+            friendshipService.addFriend(userId, friendId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (EntityNotFoundException notFoundException) {
             return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
@@ -76,7 +80,7 @@ public class UserController {
     @DeleteMapping("/{id}/friends/{friendId}")
     public ResponseEntity<?> deleteFriend(@PathVariable("id") Long userId, @PathVariable("friendId") Long friendId) {
         try {
-            userService.deleteFriend(userId, friendId);
+            friendshipService.deleteFriend(userId, friendId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (EntityNotFoundException notFoundException) {
             return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
@@ -86,7 +90,7 @@ public class UserController {
     @GetMapping("/{id}/friends")
     public ResponseEntity<?> getAllFriends(@PathVariable("id") Long userId) {
         try {
-            return new ResponseEntity<>(userService.getAllFriends(userId), HttpStatus.OK);
+            return new ResponseEntity<>(friendshipService.getAllFriends(userId), HttpStatus.OK);
         } catch (EntityNotFoundException notFoundException) {
             return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
         }
@@ -95,7 +99,7 @@ public class UserController {
     @GetMapping("/{id}/friends/common/{otherId}")
     public ResponseEntity<?> getCrossFriends(@PathVariable("id") Long userId, @PathVariable("otherId") Long otherUserId) {
         try {
-            return new ResponseEntity<>(userService.getCrossFriends(userId, otherUserId), HttpStatus.OK);
+            return new ResponseEntity<>(friendshipService.getCrossFriends(userId, otherUserId), HttpStatus.OK);
         } catch (EntityNotFoundException notFoundException) {
             return new ResponseEntity<>(new ErrorResponse(notFoundException.getMessage()), HttpStatus.NOT_FOUND);
         }
