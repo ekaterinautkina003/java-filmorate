@@ -46,7 +46,7 @@ public class UserController {
                 user.setName(user.getLogin());
             }
             return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
-        } catch (EntityNotFoundException fg){
+        } catch (EntityNotFoundException fg) {
             return new ResponseEntity<>(new ErrorResponse(fg.getMessage()), HttpStatus.NOT_FOUND);
         } catch (ValidationException e) {
             return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
