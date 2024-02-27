@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 import ru.yandex.practicum.filmorate.storage.impl.FilmsGenresDbStorage;
 
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -15,8 +14,7 @@ public class FilmFilmGenreService {
     private final FilmsGenresDbStorage filmsGenresDbStorage;
 
     public List<FilmGenre> getByFilmId(Long filmId) {
-        List<FilmGenre> res = filmsGenresDbStorage.getByFilmId(filmId);
-        return res == null ? Collections.emptyList() : res;
+        return filmsGenresDbStorage.getByFilmId(filmId);
     }
 
     public void add(Long filmId, Long genreId) {

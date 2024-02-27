@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
-import ru.yandex.practicum.filmorate.model.ErrorResponse;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.service.impl.MpaRatingService;
+
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/mpa")
@@ -20,23 +20,13 @@ public class MpaRatingController {
     private final MpaRatingService mpaRatingService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
-        try {
-            MpaRating rating = mpaRatingService.getById(id);
-            return new ResponseEntity<>(rating, HttpStatus.OK);
-        } catch (EntityNotFoundException vf) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<MpaRating> getById(@PathVariable("id") Long id) {
+        MpaRating rating = mpaRatingService.getById(id);
+        return new ResponseEntity<>(rating, HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        try {
-            return new ResponseEntity<>(mpaRatingService.getAll(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(new ErrorResponse(e.getMessage()), HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Collection<MpaRating>> getAll() {
+        return new ResponseEntity<>(mpaRatingService.getAll(), HttpStatus.OK);
     }
 }

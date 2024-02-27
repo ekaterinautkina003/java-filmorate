@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.service.Service;
 import ru.yandex.practicum.filmorate.storage.impl.MpaRatingDbStorage;
@@ -19,13 +18,7 @@ public class MpaRatingService implements Service<MpaRating> {
 
     @Override
     public MpaRating getById(Long id) {
-        try {
-            log.info("getById: {}", id);
-            return mpaRatingDbStorage.getById(id);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new EntityNotFoundException(MpaRating.class, id);
-        }
+        return mpaRatingDbStorage.getById(id);
     }
 
     @Override

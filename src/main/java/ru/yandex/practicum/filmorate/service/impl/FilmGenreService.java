@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 import ru.yandex.practicum.filmorate.service.Service;
 import ru.yandex.practicum.filmorate.storage.impl.FilmGenreDbStorage;
@@ -19,13 +18,8 @@ public class FilmGenreService implements Service<FilmGenre> {
 
     @Override
     public FilmGenre getById(Long id) {
-        try {
-            log.info("getById: {}", id);
-            return filmGenreDbStorage.getById(id);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new EntityNotFoundException(FilmGenre.class, id);
-        }
+        log.info("getById: {}", id);
+        return filmGenreDbStorage.getById(id);
     }
 
     @Override
@@ -43,9 +37,5 @@ public class FilmGenreService implements Service<FilmGenre> {
     @Override
     public Collection<FilmGenre> getAll() {
         return filmGenreDbStorage.getAll();
-    }
-
-    public boolean isExistsByName(String name) {
-        return filmGenreDbStorage.isExistsByName(name);
     }
 }

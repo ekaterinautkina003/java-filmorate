@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.Storage;
 
@@ -12,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Repository
@@ -23,25 +25,40 @@ public class UserDbStorage implements Storage<User> {
     @Override
     public User getById(Long id) {
         String query = "SELECT * FROM filmorate.users WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, new Object[]{id}, new UserMapper());
+        List<User> res = jdbcTemplate.query(query, new UserMapper(), id);
+        if (res.isEmpty()) {
+            throw new EntityNotFoundException(User.class, id);
+        }
+        return res.get(0);
     }
 
     public User getByLogin(String login) {
         String query = "SELECT * FROM filmorate.users WHERE login = ?";
-        return jdbcTemplate.queryForObject(query, new Object[]{login}, new UserMapper());
+        List<User> res = jdbcTemplate.query(query, new UserMapper(), login);
+        if (res.isEmpty()) {
+            throw new EntityNotFoundException(User.class);
+        }
+        return res.get(0);
     }
 
     @Override
     public User add(User entity) {
-        jdbcTemplate.update("insert into filmorate.users (email, login, name, birthday) values (?, ?, ?, ?)",
+        jdbcTemplate.update("insert into filmorate.users" +
+                        "    (email, login, name, birthday) " +
+                        "     values (?, ?, ?, ?)",
                 entity.getEmail(), entity.getLogin(), entity.getName(), entity.getBirthday());
         return getByLogin(entity.getLogin());
     }
 
     @Override
     public User update(User entity) {
-        jdbcTemplate.update("update filmorate.users set email=?, login=?, name=?, birthday=? where id=?",
+        int res = jdbcTemplate.update("update filmorate.users " +
+                        "   set email=?, login=?, name=?, birthday=? " +
+                        "   where id=?",
                 entity.getEmail(), entity.getLogin(), entity.getName(), entity.getBirthday(), entity.getId());
+        if (res == 0) {
+            throw new EntityNotFoundException(User.class, entity.getId());
+        }
         return entity;
     }
 

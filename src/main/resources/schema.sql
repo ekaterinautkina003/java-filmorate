@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS FILMORATE;
 
 CREATE TABLE IF NOT EXISTS filmorate.users (
     id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(50) UNIQUE NOT NULL,
     login VARCHAR(255) UNIQUE NOT NULL,
     name VARCHAR(255),
     birthday DATE
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS filmorate.users (
 
 CREATE TABLE IF NOT EXISTS filmorate.mpa (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(5) UNIQUE NOT NULL
+    name VARCHAR(25) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS filmorate.films_genre (
@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS filmorate.films (
 CREATE TABLE IF NOT EXISTS filmorate.friendship (
     user_id BIGINT NOT NULL,
     friend_id BIGINT NOT NULL,
-    status VARCHAR(20) NOT NULL,
     PRIMARY KEY (user_id, friend_id),
     FOREIGN KEY (user_id) REFERENCES filmorate.users(id),
     FOREIGN KEY (friend_id) REFERENCES filmorate.users(id)
