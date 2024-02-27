@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
@@ -19,13 +20,19 @@ public class FilmLikesDbStorage {
     private final JdbcTemplate jdbcTemplate;
 
     public void addLike(Long filmId, Long userId) {
-        jdbcTemplate.update("insert into filmorate.films_like (film_id, user_id) values (?, ?)",
+        int res = jdbcTemplate.update("insert into filmorate.films_like (film_id, user_id) values (?, ?)",
                 filmId, userId);
+        if (res == 0) {
+            throw new EntityNotFoundException(Film.class, filmId, userId);
+        }
     }
 
     public void removeLike(Long filmId, Long userId) {
-        jdbcTemplate.update("delete from filmorate.films_like where film_id=? and user_id=?",
+        int res = jdbcTemplate.update("delete from filmorate.films_like where film_id=? and user_id=?",
                 filmId, userId);
+        if (res == 0) {
+            throw new EntityNotFoundException(Film.class, filmId, userId);
+        }
     }
 
     public List<Film> getPopular(int count) {
@@ -36,7 +43,7 @@ public class FilmLikesDbStorage {
                 "GROUP BY fl.film_id, f.id, m.id " +
                 "ORDER BY COUNT(fl.film_id) DESC " +
                 "LIMIT ?";
-        return jdbcTemplate.query(query, new Object[]{count}, new FilmMapper());
+        return jdbcTemplate.query(query, new FilmMapper(), count);
     }
 
     private static class FilmMapper implements RowMapper<Film> {

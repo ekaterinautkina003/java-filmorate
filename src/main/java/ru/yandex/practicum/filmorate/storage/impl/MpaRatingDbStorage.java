@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,7 +22,11 @@ public class MpaRatingDbStorage implements Storage<MpaRating> {
     @Override
     public MpaRating getById(Long id) {
         String query = "SELECT * FROM filmorate.mpa WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, new Object[]{id}, new MpaRatingMapper());
+        List<MpaRating> res = jdbcTemplate.query(query, new MpaRatingMapper(), id);
+        if (res.isEmpty()) {
+            throw new EntityNotFoundException(MpaRating.class, id);
+        }
+        return res.get(0);
     }
 
     @Override

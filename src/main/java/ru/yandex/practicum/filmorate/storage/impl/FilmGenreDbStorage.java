@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.EntityNotFoundException;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,7 +22,11 @@ public class FilmGenreDbStorage implements Storage<FilmGenre> {
     @Override
     public FilmGenre getById(Long id) {
         String query = "SELECT * FROM filmorate.films_genre WHERE id = ?";
-        return jdbcTemplate.queryForObject(query, new Object[]{id}, new FilmGenreMapper());
+        List<FilmGenre> res = jdbcTemplate.query(query, new FilmGenreMapper(), id);
+        if (res.isEmpty()) {
+            throw new EntityNotFoundException(FilmGenre.class, id);
+        }
+        return res.get(0);
     }
 
     @Override
@@ -37,12 +43,6 @@ public class FilmGenreDbStorage implements Storage<FilmGenre> {
     @Override
     public Collection<FilmGenre> getAll() {
         return jdbcTemplate.query("SELECT * FROM filmorate.films_genre order by id", new FilmGenreMapper());
-    }
-
-    public boolean isExistsByName(String name) {
-        String query = "SELECT COUNT(*) FROM filmorate.films_genre WHERE name = ?";
-        Integer count = jdbcTemplate.queryForObject(query, Integer.class, name);
-        return count != null && count > 0;
     }
 
     public static class FilmGenreMapper implements RowMapper<FilmGenre> {
