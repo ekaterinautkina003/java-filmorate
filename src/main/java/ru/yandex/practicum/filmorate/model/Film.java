@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -7,11 +8,10 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.List;
 
 @Data
+@Builder
 public class Film {
     private Long id;
     @NotEmpty
@@ -22,22 +22,7 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero
     private int duration;
-    private Set<Long> likedUsers = new HashSet<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Film film = (Film) o;
-        return duration == film.duration
-                && Objects.equals(name, film.name)
-                && Objects.equals(description, film.description)
-                && Objects.equals(releaseDate, film.releaseDate)
-                && Objects.equals(likedUsers, film.likedUsers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description, releaseDate, duration, likedUsers);
-    }
+    private Integer rate;
+    private MpaRating mpa;
+    private List<FilmGenre> genres;
 }
