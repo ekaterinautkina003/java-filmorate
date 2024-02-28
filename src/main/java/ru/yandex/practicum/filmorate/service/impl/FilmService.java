@@ -27,7 +27,6 @@ public class FilmService implements Service<Film> {
         return film;
     }
 
-
     @Override
     public Film add(Film film) {
         log.info("add: {}", film);
@@ -63,7 +62,9 @@ public class FilmService implements Service<Film> {
     @Override
     public List<Film> getAll() {
         Collection<Film> res = filmStorage.getAll();
-        res.forEach(f -> f.setGenres(filmFilmGenreService.getByFilmId(f.getId())));
+        List<Long> filmIds = res.stream().map(Film::getId).collect(Collectors.toList());
+        Map<Long, List<FilmGenre>> genresList = filmFilmGenreService.getByListFilmId(filmIds);
+        res.forEach(f -> f.setGenres(genresList.getOrDefault(f.getId(), new ArrayList<>())));
         return List.copyOf(res);
     }
 }
